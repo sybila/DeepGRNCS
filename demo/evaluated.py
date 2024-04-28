@@ -37,7 +37,7 @@ def generate_trueEdges(filename):
     return trueEdgesDF
 
 
-def calculate_predEdgeDict(score):
+def calculate_predEdgeDict():
     matrix_calculate = np.zeros((genes_number, genes_number))
     for i in range(genes_number):
         mu, std = np.mean(Coexpressed[i]), np.std(Coexpressed[i])
@@ -48,7 +48,7 @@ def calculate_predEdgeDict(score):
     for i in range(genes_number):
         for j in range(i + 1, genes_number):
             temp = max(matrix_calculate[i][j], matrix_calculate[j][i])
-            if temp < score:
+            if temp < 0:
                 continue
             keys = gene_list[i] + ',' + gene_list[j]
             predEdgesDict[keys] = temp
@@ -63,7 +63,7 @@ def calculate_trueEdgeDict():
         if key in labelDict.keys():
             trueEdgesDict[key] = 1
         else:
-            trueEdgesDict[key] = -1
+            trueEdgesDict[key] = 0
     return trueEdgesDict
 
 
@@ -91,7 +91,7 @@ if __name__ == '__main__':
         Coexpressed = load_coexpressed_result(Coexpressed_file)
         trueEdgesDF_file = network_file_list[i]
         labelDict = generate_trueEdges(trueEdgesDF_file)
-        predEdgesDict = calculate_predEdgeDict(0)
+        predEdgesDict = calculate_predEdgeDict()
         trueEdgesDict = calculate_trueEdgeDict()
 
         AUPRC, AUROC = computeAUC()
@@ -100,9 +100,9 @@ if __name__ == '__main__':
 
     print("AUROC: ", end="")
     for auroc in AUROC_list:
-        print(format(auroc, '.2f'), end=" ")
+        print(format(auroc, '.3f'), end=" ")
     print("")
     print("AUPRC: ", end="")
     for auprc in AUPRC_list:
-        print(format(auprc, '.2f'), end=" ")
+        print(format(auprc, '.3f'), end=" ")
     print("")

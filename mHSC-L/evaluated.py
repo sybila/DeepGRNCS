@@ -72,7 +72,8 @@ if __name__ == '__main__':
 
     Coexpressed_file = "TFs+500/Result.txt"
     Coexpressed = load_coexpressed_result(Coexpressed_file)
-    predEdgesDict = calculate_predEdgeDict(3)
+    zscore = 3
+    predEdgesDict = calculate_predEdgeDict(zscore)
     trueEdgesDict = calculate_trueEdgeDict()
 
     AUPRC, AUROC = computeAUC()
