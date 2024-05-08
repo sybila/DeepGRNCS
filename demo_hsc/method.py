@@ -163,7 +163,7 @@ if __name__ == '__main__':
 
             # print("2. Building models, loss functions and optimizers")
             model = DeepGRNCS(config)
-            criterion = nn.MSELoss()
+            criterion = nn.CrossEntropyLoss()
             optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
             # print("3. Start training")

@@ -14,18 +14,24 @@ def generate_expression_data(filename):
 
 
 def generate_tf_data(data):
-    data_tf = data.copy()
-    data_tf = np.around(data_tf * 10)
+    data_tf = data[tfs, :].copy()
+    data_tf = np.around(data_tf * 2)
     return data_tf.transpose()
 
 
 def generate_ntf_data(data):
-    data_ntf = data.copy()
+    data_ntf = data[genes, :].copy()
     for i in range(data_ntf.shape[0]):
         row = data_ntf[i]
         row = (np.log10(row / len(row) + 10 ** -4) + 4) / 4
         data_ntf[i] = np.around(row * 10)
     return data_ntf.transpose()
+
+def generate_tfInof():
+    tfdict = {}
+    for k in range(len(tfs)):
+        tfdict[tfs[k]] = k
+    return tfs, tfdict
 
 
 def generate_multi_data(data_file):
@@ -125,6 +131,11 @@ if __name__ == '__main__':
     network_number = 3
     dataset_file_list = ["data/Subdata" + str(i) + ".csv" for i in range(1, network_number + 1)]
     output_file_list = ["output/Result" + str(i) + ".txt" for i in range(1, network_number + 1)]
+    tf_file = "data/TFs.csv"
+    gene_file = "data/Genes.csv"
+    tfs = pd.read_csv(tf_file, index_col=0)['index'].values.astype(np.int32)
+    tfs_dict = generate_tfInof()
+    genes = pd.read_csv(gene_file, index_col=0)['index'].values.astype(np.int32)
 
     for i in range(len(dataset_file_list)):
         data_file = dataset_file_list[i]
@@ -134,9 +145,11 @@ if __name__ == '__main__':
         print("The number of samples:", expression_data.shape[1])
         data_tf = generate_tf_data(expression_data)
         data_ntf = generate_ntf_data(expression_data)
+        print("The number of tfs:", data_tf.shape[1])
+        print("The number of ntfs:", data_ntf.shape[1])
         multi_data = generate_multi_data(data_file)
         train_list, test_list = generate_index_list(expression_data.shape[1])
-        input_dim = np.int64(expression_data.shape[0])
+        input_dim = np.int64(data_tf.shape[1])
         output_dim = np.max(np.max(data_ntf))
         output_dim = np.int64(output_dim + 1)
         config = Config(input_dim, output_dim)
@@ -151,7 +164,10 @@ if __name__ == '__main__':
             data_X = multi_data.copy()
             data_X[:, :, j] = 0
             data_medium = multi_data.copy()
-            data_medium[:, :, j] = 0
+            if j in tfs:
+                tfindex = tfs_dict[j]
+                data_X[:, tfindex] = 0
+                data_medium[:, tfindex] = 0
             data_Y = data_test.copy()
 
             # print("1. Preparing input data")
@@ -163,7 +179,7 @@ if __name__ == '__main__':
 
             # print("2. Building models, loss functions and optimizers")
             model = DeepGRNCS(config)
-            criterion = nn.MSELoss()
+            criterion = nn.CrossEntropyLoss()
             optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
             # print("3. Start training")

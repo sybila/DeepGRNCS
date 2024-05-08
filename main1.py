@@ -10,20 +10,21 @@ from torch.utils.data import DataLoader
 def generate_expression_data(filename):
     expression_data = pd.read_csv(filename, header='infer', index_col=0)
     expression_data = np.array(expression_data, dtype=np.float64)
-    lower = np.min(np.min(expression_data))
-    expression_data = expression_data.transpose() - lower
     return expression_data
 
 
 def generate_tf_data(data):
     data_tf = data.copy()
-    data_tf = np.around(data_tf * 2)
+    data_tf = np.around(data_tf * 10)
     return data_tf.transpose()
 
 
 def generate_ntf_data(data):
     data_ntf = data.copy()
-    data_ntf = np.around(data_ntf / 2)
+    for i in range(data_ntf.shape[0]):
+        row = data_ntf[i]
+        row = (np.log10(row / len(row) + 10 ** -4) + 4) / 4
+        data_ntf[i] = np.around(row * 10)
     return data_ntf.transpose()
 
 
@@ -32,7 +33,8 @@ def generate_multi_data(data_file):
     for file in dataset_file_list:
         if file != data_file:
             pair_file_list.append(file)
-    multi_data = [data_tf]
+    multi_data = []
+    multi_data.append(data_tf)
     for pair_file in pair_file_list:
         pair_expression_data = generate_expression_data(pair_file)
         pair_tf_data = generate_tf_data(pair_expression_data)
@@ -77,7 +79,7 @@ class MyDataset:
 
 class Config(object):
     def __init__(self, input_dim, output_dim):
-        self.model_name = 'DeepGRNCS'
+        self.model_name = 'DeepGRNMS'
         self.dropout = 0.2
         self.input_dim = input_dim
         self.output_dim = output_dim
@@ -120,9 +122,9 @@ class DeepGRNCS(nn.Module):
 
 
 if __name__ == '__main__':
-
-    dataset_file_list = ["data/subdata_" + str(i) + ".csv" for i in range(1, 4)]
-    output_file_list = ["output/Result" + str(i) + ".txt" for i in range(1, 4)]
+    network_number = 3
+    dataset_file_list = ["data/Subdata" + str(i) + ".csv" for i in range(1, network_number + 1)]
+    output_file_list = ["output/Result" + str(i) + ".txt" for i in range(1, network_number + 1)]
 
     for i in range(len(dataset_file_list)):
         data_file = dataset_file_list[i]
@@ -134,7 +136,7 @@ if __name__ == '__main__':
         data_ntf = generate_ntf_data(expression_data)
         multi_data = generate_multi_data(data_file)
         train_list, test_list = generate_index_list(expression_data.shape[1])
-        input_dim = np.int64(expression_data.shape[0])
+        input_dim = np.int64(data_tf.shape[1])
         output_dim = np.max(np.max(data_ntf))
         output_dim = np.int64(output_dim + 1)
         config = Config(input_dim, output_dim)
