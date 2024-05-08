@@ -22,7 +22,13 @@
   python main1.py
   ```
 ### For real gene expression datasets, inferring TFs on Genes regulatory networks.
-1. Prepare the gene expression dataset (as above), along with information on TFs and genes in the following format:
+1. Prepare the scRNA-seq dataset (as above), along with information on TFs and genes in the following format:
+
+  | TF|index|
+  |-------|------|
+  | TF1|1|
+  | TF2|3|
+  | …… | ……|
 
   | Gene|index|
   |-------|------|
@@ -30,11 +36,8 @@
   | Gene2|2|
   | …… | ……|
 
-  | TF|index|
-  |-------|------|
-  | TF1|1|
-  | TF2|3|
-  | …… | ……|
+Where 'index' indicates the column index position of the TF (gene) in the scRNA-seq dataset.
+
 3. Command to run DeepGRNSC:
   ```
   python main2.py
