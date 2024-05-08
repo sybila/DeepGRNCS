@@ -15,7 +15,7 @@ def generate_expression_data(filename):
 
 def generate_tf_data(data):
     data_tf = data[tfs, :].copy()
-    data_tf = np.around(data_tf * 2)
+    data_tf = np.around(data_tf * 10)
     return data_tf.transpose()
 
 
