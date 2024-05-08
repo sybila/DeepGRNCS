@@ -64,7 +64,7 @@ def calculate_predEdgeDict(score):
 
 if __name__ == '__main__':
     label_file = "TFs+500/Label.csv"
-    tfs_file =  "TFs+500/TF.csv"
+    tfs_file = "TFs+500/TF.csv"
     targets_file = "TFs+500/Target.csv"
     label = pd.read_csv(label_file, index_col=0).values.astype(np.str_)
     tfs = pd.read_csv(tfs_file, index_col=0)['index'].values.astype(np.str_)
@@ -80,4 +80,3 @@ if __name__ == '__main__':
 
     print("AUROC: ", format(AUROC, '.3f'))
     print("AUPRC: ", format(AUPRC, '.3f'))
-

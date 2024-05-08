@@ -44,7 +44,7 @@ def calculate_predEdgeDict():
     predEdgesDict = {}
     for i in range(genes_number):
         for j in range(genes_number):
-            if i == j :
+            if i == j:
                 continue
             keys = gene_list[j] + ',' + gene_list[i]
             predEdgesDict[keys] = matrix_calculate[j][i]
@@ -57,7 +57,7 @@ def calculate_trueEdgeDict():
         if key in labelDict.keys():
             trueEdgesDict[key] = 1
         else:
-            trueEdgesDict[key] = -1
+            trueEdgesDict[key] = 0
     return trueEdgesDict
 
 
