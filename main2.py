@@ -15,7 +15,7 @@ def generate_expression_data(filename):
 
 def generate_tf_data(data):
     data_tf = data[tfs, :].copy()
-    data_tf = np.around(data_tf * 2)
+    data_tf = np.around(data_tf * 10)
     return data_tf.transpose()
 
 
@@ -26,6 +26,7 @@ def generate_ntf_data(data):
         row = (np.log10(row / len(row) + 10 ** -4) + 4) / 4
         data_ntf[i] = np.around(row * 10)
     return data_ntf.transpose()
+
 
 def generate_tfInof():
     tfdict = {}
@@ -85,7 +86,7 @@ class MyDataset:
 
 class Config(object):
     def __init__(self, input_dim, output_dim):
-        self.model_name = 'DeepGRNMS'
+        self.model_name = 'DeepGRNCS'
         self.dropout = 0.2
         self.input_dim = input_dim
         self.output_dim = output_dim

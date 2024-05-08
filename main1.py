@@ -79,7 +79,7 @@ class MyDataset:
 
 class Config(object):
     def __init__(self, input_dim, output_dim):
-        self.model_name = 'DeepGRNMS'
+        self.model_name = 'DeepGRNCS'
         self.dropout = 0.2
         self.input_dim = input_dim
         self.output_dim = output_dim
