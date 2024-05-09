@@ -46,7 +46,7 @@ Where 'index' indicates the column index position of the TF (gene) in the scRNA-
 
 3. Inferring GRNs based on real datasets:
   ```
-  python main.py --task "DeepGRNCS_TF" --data_file "data/ExpressionData.csv" --tf_file "data/TF.csv" --gene_file "data/Target.csv"  --save_name "output" --net_number 3
+  python main.py --task "DeepGRNCS_TF" --data_file "data/ExpressionData" --tf_file "data/TF.csv" --gene_file "data/Target.csv"  --save_name "output" --net_number 3
   ```
 
 4. Inferring GRN based on a single real dataset:
