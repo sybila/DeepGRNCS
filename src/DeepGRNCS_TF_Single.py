@@ -15,11 +15,10 @@ class DeepGRNCS_TF_Single:
         self.data_file = opt.data_file
         self.tfs = pd.read_csv(opt.tf_file, index_col=0)['index'].values.astype(np.int32)
         self.genes = pd.read_csv(opt.gene_file, index_col=0)['index'].values.astype(np.int32)
-        try:
-            os.mkdir(opt.save_name)
-        except:
-            print('dir exist')
-        self.output_file = opt.save_name + "/Result.txt"
+
+        if not os.path.exists(opt.save_name):
+            os.makedirs(opt.save_name)
+        self.output_file = os.path.join(opt.save_name, opt.save_file_name)
 
     def generate_expression_data(self, filename):
         expression_data = pd.read_csv(filename, header='infer', index_col=0)

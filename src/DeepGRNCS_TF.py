@@ -20,7 +20,7 @@ class DeepGRNCS_TF:
             os.mkdir(opt.save_name)
         except:
             print('dir exist')
-        self.output_file_list = [opt.save_name + "/Result" + str(i) + ".txt" for i in range(1, self.number + 1)]
+        self.output_file_list = [os.path.join(opt.save_name, opt.save_file_name) + str(i) + ".txt" for i in range(1, self.number + 1)]
 
     def generate_expression_data(self, filename):
         expression_data = pd.read_csv(filename, header='infer', index_col=0)
